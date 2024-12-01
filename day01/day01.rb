@@ -21,3 +21,4 @@ distances = list1.compare(list2) do |a, b|
 end
 
 puts "The total distance between the two list is #{distances.sum}"
+puts "The similarity score between the two lists os #{list1.similarity(list2)}"

@@ -18,4 +18,12 @@ class List
       yield position, other.positions[idx] if block_given?
     end
   end
+
+  def similarity(other)
+    coefficients = other.positions.group_by { |position| position}.transform_values(&:size)
+
+    positions.map do |position|
+      position * coefficients.fetch(position, 0)
+    end.sum
+  end
 end

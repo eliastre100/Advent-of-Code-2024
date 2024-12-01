@@ -52,4 +52,35 @@ RSpec.describe List do
       end
     end
   end
+
+  describe "#similarity" do
+    context "when a position is not on the other list" do
+      it "returns 0" do
+        subject.add(42)
+
+        other = described_class.new(43)
+
+        expect(subject.similarity(other)).to be 0
+      end
+    end
+
+    context "when a position is on the other list" do
+      it "returns the similarity score of x * n" do
+        subject.add(42)
+
+        other = described_class.new(43, 42, 42)
+
+        expect(subject.similarity(other)).to be 84
+      end
+    end
+
+    it "returns the similarity score" do
+      subject.add(2)
+      subject.add(5)
+      subject.add(7)
+
+      other = described_class.new(2, 2, 6, 6, 6, 7, 7, 7)
+      expect(subject.similarity(other)).to be(2 * 2 + 7 * 3)
+    end
+  end
 end
