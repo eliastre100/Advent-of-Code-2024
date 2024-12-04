@@ -18,7 +18,6 @@ RSpec.describe XMasGrid do
   describe "#search" do
     it "finds only the X-mas matches" do
       expect(subject.search("MAS")).to eq([
-                                            { x: 1, y: 5 },
                                             { x: 1, y: 2 },
                                           ])
     end

@@ -7,14 +7,12 @@ class XMasGrid < CrosswordGrid
 
     super(term).map do |match|
       { x: match[:x] + term_center_distance * match[:vector][:x], y: match[:y] + term_center_distance * match[:vector][:y], vector: match[:vector] }
-    end.compact
-        .group_by { |match| vector_type(match[:vector])}.map do |type, match_group|
-      next unless type == :diagonal
-      match_group.group_by { |position| { x: position[:x], y: position[:y] } }
-                 .transform_values(&:size)
-                 .select { |_, count| count >= 2 }
-                 .keys
-    end.flatten.compact
+    end.compact.select { |position| vector_type(position[:vector]) == :diagonal }
+               .group_by { |position| { x: position[:x], y: position[:y] } }
+               .transform_values(&:size)
+               .select { |_, count| count >= 2 }
+               .keys
+               .flatten.compact
   end
 
   def vector_type(vector)
