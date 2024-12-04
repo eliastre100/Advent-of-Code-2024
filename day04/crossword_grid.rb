@@ -21,7 +21,7 @@ class CrosswordGrid
       end.map do |vector|
         { x: position[:x], y: position[:y], vector: vector } if vector
       end
-    end.flatten.compact
+    end.flatten.compact.uniq
   end
 
   def positions(token)
@@ -33,7 +33,6 @@ class CrosswordGrid
   end
 
   def term_present?(term, position, vector)
-    p "#{position}: #{at(position[:x], position[:y])}" if @debug
     return true if term.nil? || term == "" # term.blank?
     return false if at(position[:x], position[:y]) != term[0]
 
