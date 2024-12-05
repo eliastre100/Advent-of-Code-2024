@@ -17,7 +17,15 @@ end
 
 updates = updates.map { |definition| Update.new(definition) }
 
-valid_updates = updates.select { |update| update.valid?(ruleset) }
-middle_page_sum = valid_updates.map(&:middle_page).sum
+sorted_updates = updates.group_by { |update| update.valid?(ruleset) }
 
-puts "There is #{valid_updates.count} valid updates (sum of middle pages: #{middle_page_sum})"
+valid_updates = sorted_updates[true]
+valid_middle_page_sum = valid_updates.map(&:middle_page).sum
+
+puts "There is #{valid_updates.count} valid updates (sum of middle pages: #{valid_middle_page_sum})"
+
+invalid_updates = sorted_updates[false]
+invalid_updates.each { |update| update.fix!(ruleset) }
+invalid_middle_page_sum = invalid_updates.map(&:middle_page).sum
+
+puts "There is #{invalid_updates.count} valid updates (sum of middle pages: #{invalid_middle_page_sum})"

@@ -20,4 +20,12 @@ RSpec.describe Constraint do
       end
     end
   end
+
+  describe "invalid_match" do
+    it "returns the breached rule & value breaching it" do
+      update = Update.new("1,42,20")
+
+      expect(subject.invalid_match(42, update)).to eql({ rule: :before, value: 20, from: 42 })
+    end
+  end
 end

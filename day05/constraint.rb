@@ -4,7 +4,15 @@ class Constraint
   end
 
   def match?(evaluated_value, update)
-    @definition[:before].reject { |before| respect_before(before, evaluated_value, update) }.empty?
+    invalid_match(evaluated_value, update).nil?
+  end
+
+  def invalid_match(evaluated_value, update)
+    [:before].each do |constraint|
+      breaching_value = @definition[constraint].reject { |before| respect_before(before, evaluated_value, update) }.first
+      return { rule: constraint, value: breaching_value, from: evaluated_value } if breaching_value
+    end
+    nil
   end
 
   private

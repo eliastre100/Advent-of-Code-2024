@@ -64,4 +64,16 @@ RSpec.describe Update do
       end
     end
   end
+
+  describe "#fix!" do
+    it "fixes the update to be valid" do
+      subject = described_class.new("1,64,42")
+      ruleset = Ruleset.new
+      ruleset.after(64, 42)
+
+      expect(subject.valid?(ruleset)).to be false
+      expect { subject.fix!(ruleset) }.to change { subject.data }.from([1, 64, 42]).to([1, 42, 64])
+      expect(subject.valid?(ruleset)).to be true
+    end
+  end
 end
