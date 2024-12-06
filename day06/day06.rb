@@ -3,6 +3,7 @@
 require "active_support"
 require_relative "map"
 require_relative "guard"
+require_relative "simulation"
 
 content = File.read(ARGV[0])
 
@@ -21,16 +22,10 @@ guard_starting_position = content.split("\n").map.with_index do |row, y|
     end
   end
 end.flatten.compact.first
+
 guard = Guard.new(guard_starting_position[:x], guard_starting_position[:y], direction: guard_starting_position[:direction])
+simulation = Simulation.new(guard, map)
 
-@positions = []
-until guard.out?(map)
-  @positions << { x: guard.x, y: guard.y }
-  if guard.can_walk?(map)
-    guard.walk(map)
-  else
-    guard.turn
-  end
-end
+simulation.simulate!
 
-puts "The guard just left the room after #{@positions.uniq.count} positions visited"
+puts "The guard just left the room after #{simulation.positions.count} positions visited"

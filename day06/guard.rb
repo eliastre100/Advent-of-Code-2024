@@ -37,7 +37,7 @@ class Guard
     map.out?(@x, @y)
   end
 
-  private
+  #private
 
   def next_position
     case @direction
