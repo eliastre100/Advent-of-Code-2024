@@ -1,0 +1,3 @@
+This day's part 2 wasn't done using TDD unlike the rest of the days (being late and not wanting to fall behind)
+Moreover, the solution is way too long to give a result to be acceptable. It might need a redo when there will be no
+more time pressure

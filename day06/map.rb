@@ -1,6 +1,16 @@
 class Map
   attr_reader :width, :height, :obstacles
 
+  def self.from(other)
+    map = Map.new(".\n")
+    map.instance_variable_set(:@width, other.width)
+    map.instance_variable_set(:@height, other.height)
+    other.obstacles.each do |obstacle|
+      map.add_obstacle(obstacle)
+    end
+    map
+  end
+
   def initialize(definition)
     definition = definition.split("\n").map { |line| line.split("") }
 
@@ -30,5 +40,10 @@ class Map
 
   def out?(x, y)
     !(x >= 0 && x < @width && y >= 0 && y < @height)
+  end
+
+  def add_obstacle(obstacle)
+    @obstacles[obstacle[:y]] ||= {}
+    @obstacles[obstacle[:y]][obstacle[:x]] = true
   end
 end

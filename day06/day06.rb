@@ -26,6 +26,7 @@ end.flatten.compact.first
 guard = Guard.new(guard_starting_position[:x], guard_starting_position[:y], direction: guard_starting_position[:direction])
 simulation = Simulation.new(guard, map)
 
-simulation.simulate!
+simulation.simulate!(simulate_opportunities: true)
 
 puts "The guard just left the room after #{simulation.positions.count} positions visited"
+puts "There are #{simulation.opportunities.uniq.count} opportunities for a loop to occurre"
