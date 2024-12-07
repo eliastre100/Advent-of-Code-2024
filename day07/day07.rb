@@ -15,3 +15,12 @@ repairable_equations = equations.select(&:repaire)
 
 puts "There are #{repairable_equations.count} equations repairable with + and *. Their result sum is #{repairable_equations.map(&:result).sum}"
 
+equations = content.split("\n").map do |equation|
+  result, operations = equation.split(":")
+  result = result.to_i
+  operations = operations.split(" ").map(&:to_i)
+  Equation.new(result, operations, enable_join: true)
+end
+
+repairable_equations = equations.select(&:repaire)
+puts "There are #{repairable_equations.count} equations repairable with +, * and ||. Their result sum is #{repairable_equations.map(&:result).sum}"
