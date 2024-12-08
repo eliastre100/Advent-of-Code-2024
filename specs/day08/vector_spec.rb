@@ -25,9 +25,19 @@ describe Vector do
   describe "#apply_to" do
     it "returns the provided position updated by the vector" do
       expect(subject.apply_to(x: 1, y: 2 )).to eql({
-                                                        x: 11,
-                                                        y: 12
-                                                      })
+                                                     x: 11,
+                                                     y: 12
+                                                   })
+    end
+  end
+
+  describe "#align" do
+    it "returns the 'aligned' vector" do
+      subject = described_class.new(x: 0.1, y: 1)
+      aligned = subject.align
+
+      expect(aligned.x).to be 1
+      expect(aligned.y).to be 10
     end
   end
 end

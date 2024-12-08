@@ -21,4 +21,17 @@ class Vector
       y: (y + @y).round
     }
   end
+
+  def align
+    return Vector.new(x: @x.to_i, y: @y.to_i) if non_decimal?
+
+    Vector.new(x: @x * 10, y: @y * 10).align
+  end
+
+  private
+
+  def non_decimal?
+    @x.to_f % 1 == 0 &&
+      @y.to_f % 1 == 0
+  end
 end

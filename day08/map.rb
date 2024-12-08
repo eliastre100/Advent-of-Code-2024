@@ -26,15 +26,25 @@ class Map
     end.flatten.uniq.select { |position| in_bound?(position) }
   end
 
-  private
-
-  def register_antenna(id, x, y)
-    @antennas[id] ||= []
-    @antennas[id] << Antenna.new(x, y)
+  def harmonic_antinodes
+    @antennas.values.map do |antennas|
+      antennas.map.with_index do |antenna_a, idx|
+        antennas[(idx + 1)..-1].map do |antenna_b|
+          antenna_a.harmonic_antinodes(antenna_b, within: self)
+        end
+      end
+    end.flatten.uniq.select { |position| in_bound?(position) }
   end
 
   def in_bound?(position)
     position[:x] >= 0 && position[:x] < @width &&
       position[:y] >= 0 && position[:y] < @height
+  end
+
+  private
+
+  def register_antenna(id, x, y)
+    @antennas[id] ||= []
+    @antennas[id] << Antenna.new(x, y)
   end
 end
