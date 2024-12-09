@@ -14,6 +14,20 @@ RSpec.describe Fragment do
     end
   end
 
+  describe "#previous" do
+    it "returns the previous fragment" do
+      subject  # ensure subject is created ahead of expect
+      expect(fragment.previous).to be subject
+    end
+  end
+
+  describe "#attach_to" do
+    it "updates the previous fragment" do
+      head = described_class.new(2, 1, :file)
+      expect { subject.attach_to(head) }.to change { subject.previous }.from(nil).to(head)
+    end
+  end
+
   describe "#attach" do
     it "updates the next fragment" do
       next_tail = described_class.new(1, 1, :file)

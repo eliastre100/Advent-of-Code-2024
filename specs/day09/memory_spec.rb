@@ -151,4 +151,84 @@ RSpec.describe Memory do
       expect(subject.checksum).to be 1 * 10 + 2 * 11 + 2 * 12
     end
   end
+
+  describe "compact_once!" do
+    it "moves on a perfect fit" do
+      subject.add_free_space(10)
+      subject.add_file(10)
+      subject.add_file(10)
+
+      subject.compact_once!
+
+      fragment = subject.head
+      expect(fragment.id).to be 1
+      expect(fragment.size).to be 10
+      expect(fragment.type).to be :file
+
+      fragment = fragment.next
+      expect(fragment.id).to be 0
+      expect(fragment.size).to be 10
+      expect(fragment.type).to be :file
+
+      fragment = fragment.next
+      expect(fragment.size).to be 10
+      expect(fragment.type).to be :free
+      expect(fragment.next).to be nil
+    end
+
+    it "moves and leave space on a partial fit" do
+      subject.add_free_space(10)
+      subject.add_file(10)
+      subject.add_file(5)
+
+      subject.compact_once!
+
+      fragment = subject.head
+      expect(fragment.id).to be 1
+      expect(fragment.size).to be 5
+      expect(fragment.type).to be :file
+
+      fragment = fragment.next
+      expect(fragment.size).to be 5
+      expect(fragment.type).to be :free
+
+      fragment = fragment.next
+      expect(fragment.id).to be 0
+      expect(fragment.size).to be 10
+      expect(fragment.type).to be :file
+
+      fragment = fragment.next
+      expect(fragment.size).to be 5
+      expect(fragment.type).to be :free
+      expect(fragment.next).to be nil
+    end
+
+    it "does not move when there is no full fit" do
+      subject.add_free_space(10)
+      subject.add_file(11)
+      subject.add_file(15)
+
+      subject.compact_once!
+
+      fragment = subject.head
+      expect(fragment.size).to be 10
+      expect(fragment.type).to be :free
+
+      fragment = fragment.next
+      expect(fragment.id).to be 0
+      expect(fragment.size).to be 11
+      expect(fragment.type).to be :file
+
+      fragment = fragment.next
+      expect(fragment.id).to be 1
+      expect(fragment.size).to be 15
+      expect(fragment.type).to be :file
+      expect(fragment.next).to be nil
+    end
+
+    it "does not move 2 times the same file" do
+      subject.add_free_space(10)
+      subject.add_file(10)
+    end
+  end
 end

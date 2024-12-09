@@ -1,15 +1,26 @@
 class Fragment
-  attr_reader :id, :size, :type, :next
+  attr_reader :id, :size, :type, :next, :previous
 
   def initialize(id, size, type, next_fragment: nil)
     @id = id
     @size = size
     @type = type
-    @next = next_fragment
+    attach(next_fragment)
+    @previous = nil
   end
 
   def attach(fragment)
+    return if @next == fragment
+
     @next = fragment
+    @next.attach_to(self) unless @next.nil?
+  end
+
+  def attach_to(fragment)
+    return if @previous == fragment
+
+    @previous = fragment
+    @previous.attach(self) unless @previous.nil?
   end
 
   def allocate(id, size)
@@ -22,7 +33,7 @@ class Fragment
     if size != @size
       next_fragment = Fragment.new(0, @size - size, :free, next_fragment: @next)
       @size = size
-      @next = next_fragment
+      attach(next_fragment)
     end
   end
 
@@ -35,7 +46,7 @@ class Fragment
     else
       fragment = Fragment.new(0, @size - size, :free, next_fragment: @next)
       @size = size
-      @next = fragment
+      attach(fragment)
     end
   end
 end

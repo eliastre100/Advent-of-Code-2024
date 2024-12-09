@@ -44,6 +44,25 @@ class Memory
     compact!
   end
 
+  def compact_once!
+    current_file = last_fragment(type: :file)
+
+    until current_file.nil?
+      current = head
+
+      until current == current_file
+        if current.type == :free && current.size >= current_file.size
+          current.allocate(current_file.id, current_file.size)
+          current_file.resize(0)
+          break
+        end
+        current = current.next
+      end
+
+      current_file = previous_file(current_file)
+    end
+  end
+
   def compacted?
     file_allowed = true
     fragment = head
@@ -107,5 +126,15 @@ class Memory
       current = current.next
     end
     last_known
+  end
+
+  def previous_file(from)
+    current = from.previous
+
+    until current.nil? || current.type == :file
+      current = current.previous
+    end
+
+    current
   end
 end
